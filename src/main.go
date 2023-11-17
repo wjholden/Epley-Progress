@@ -36,7 +36,7 @@ func main() {
 CREATE TABLE Epley
 	(id INTEGER PRIMARY KEY AUTOINCREMENT,
 		Lift TEXT NOT NULL,
-		Weight INTEGER NOT NULL,
+		Weight REAL NOT NULL,
 		Reps INTEGER NOT NULL,
 		Estimate INTEGER AS (ROUND((0.033 * Reps * Weight) + Weight))
 	)
@@ -72,11 +72,12 @@ func getStats(lift string, db *sql.DB) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var weight, reps, estimate int
+		var reps, estimate int
+		var weight float64
 		err = rows.Scan(&weight, &reps, &estimate)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("%3d kg for %2d => %3d\n", weight, reps, estimate)
+		fmt.Printf("%3d kg for %2d => %3d\n", int(weight), reps, estimate)
 	}
 }
